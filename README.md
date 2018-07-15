@@ -10,7 +10,7 @@ Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov<br />
 
 ## How to Install the Add-on, step-by-step
 
-1. Download **RenderBurst.py**
+1. Download **[RenderBurst.py](https://github.com/AG-ent/RenderBurst/blob/master/RenderBurst.py)**
 
 2. Launch Blender! :) Go File > User Preferences > Add-ons
 

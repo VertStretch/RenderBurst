@@ -3,12 +3,13 @@
 Render all cameras, one by one, and store the results.
 Note: Currently supports 2.79 only. Doesn’t support animation.
 
-Authors:
+Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov
+Email: support@creativeshrimp.com
 
 
 # How to Install the Add-on, step-by-step
 
-Download RenderBurst.py 
+1. Download RenderBurst.py 
 
 2. Launch Blender! :) Go File > User Preferences > Add-ons
 

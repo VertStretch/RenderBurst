@@ -1,14 +1,14 @@
 # Render Burst - Batch Rendering Add-on for Blender 
 
-Render all cameras, one by one, and store the results.
-Note: Currently supports 2.79 only. Doesn’t support animation.
+Render all cameras, one by one, and store the results. <br />
+*Note: Currently supports 2.79 only. Doesn’t support animation.<br />*
 
-Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov
+Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov<br />
 
 
-# How to Install the Add-on, step-by-step
+## How to Install the Add-on, step-by-step
 
-1. Download RenderBurst.py 
+1. Download **RenderBurst.py**
 
 2. Launch Blender! :) Go File > User Preferences > Add-ons
 
@@ -18,23 +18,23 @@ Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov
 
 [image]
 
-4. Navigate to the folder with the RenderBurst.py file, select it and click Install Add-on from File
+4. Navigate to the folder with the **RenderBurst.py** file, select it and click Install Add-on from File.<br />
 
-You should now see a new tab in the …… toolshelf, called Render Burst. 
+You should now see a new tab in the right toolshelf, called Render Burst. 
 
 [image]
 
-Congrats!
+Congrats!<br />
 
 
-# How to Use Render Burst
+## How to Use Render Burst
 
-Select the mode (All Cameras or Selected) and hit RENDER! Simple, right? :)
+Select the mode (All Cameras or Selected) and hit **RENDER!** Simple, right? :)
 
-Don’t forget to set up the output folder in the render settings tab beforehand.
+*Note: Don’t forget to set up the output folder in the render settings tab beforehand.*
 
 
-# Over to You
+## Over to You
 
 Have fun and if you discover a bug or just want to say hi, feel free to drop us line at support@creativeshrimp.com
 

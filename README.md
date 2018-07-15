@@ -40,8 +40,7 @@ Have fun and if you discover a bug or just want to say hi, feel free to drop us 
 
 Gleb and Aidy
 
-Gleb on Twitter: https://twitter.com/gleb_alexandrov
-Aidy on Twitter: https://twitter.com/AidyBurrows3D
-
-Gleb on Facebook: https://www.facebook.com/CreativeShrimp/
-Aidy on Facebook: https://www.facebook.com/AidyBurrows3D/
+Gleb on Twitter: https://twitter.com/gleb_alexandrov <br />
+Aidy on Twitter: https://twitter.com/AidyBurrows3D <br /> <br />
+Gleb on Facebook: https://www.facebook.com/CreativeShrimp/ <br />
+Aidy on Facebook: https://www.facebook.com/AidyBurrows3D/ <br />

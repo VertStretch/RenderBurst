@@ -1,7 +1,7 @@
 # Render Burst - Batch Rendering Add-on for Blender 
 
 Render all cameras, one by one, and store the results. <br />
-*Note: Currently supports 2.79 only. Doesn’t support animation.<br />*
+*Note: Currently supports **2.79** only. Doesn’t support animation.<br />*
 
 Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov<br />
 

@@ -5,6 +5,8 @@ Render all cameras, one by one, and store the results. <br />
 
 Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov<br />
 
+![Imgur](https://i.imgur.com/VoyEm7D.jpg)
+
 
 ## How to Install the Add-on, step-by-step
 
@@ -12,17 +14,15 @@ Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov<br />
 
 2. Launch Blender! :) Go File > User Preferences > Add-ons
 
-[image]
-
 3. Press the Install Add-on from File Button
 
-[image]
+![Imgur](https://i.imgur.com/7YLATlj.png)
 
 4. Navigate to the folder with the **RenderBurst.py** file, select it and click Install Add-on from File.<br />
 
 You should now see a new tab in the right toolshelf, called Render Burst. 
 
-[image]
+![Imgur](https://i.imgur.com/hkKezey.png)
 
 Congrats!<br />
 

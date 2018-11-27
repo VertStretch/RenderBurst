@@ -1,9 +1,8 @@
 bl_info = {
     "name": "Render Burst",
     "category": "Render",
-    "blender": (2, 80, 0),
     "author" : "CGMasters.net, CreativeShrimp.com <support@creativeshrimp.com>",
-    "version" : (1, 0, 28),
+    "version" : (1, 0, 27),
     "description" :
             "Render all cameras, one by one, and store results.",
 }
@@ -36,12 +35,12 @@ class RenderBurst(bpy.types.Operator):
     def execute(self, context):
         self.stop = False
         self.rendering = False
-        scene = bpy.context.scene
-        wm = bpy.context.window_manager
+        scene = context.scene
+        wm = context.window_manager
         if wm.rb_filter.rb_filter_enum == 'selected':
-            self.shots = [ o.name+'' for o in bpy.context.selected_objects if o.type=='CAMERA' and o.visible_get() == True]
+            self.shots = [ o.name+'' for o in bpy.context.selected_objects if o.type=='CAMERA' and o.is_visible(scene) == True]
         else:
-            self.shots = [ o.name+'' for o in bpy.data.objects if o.type=='CAMERA' and o.visible_get() == True ]
+            self.shots = [ o.name+'' for o in bpy.data.objects if o.type=='CAMERA' and o.is_visible(scene) == True ]
 
 
         if len(self.shots) < 0:
@@ -52,8 +51,8 @@ class RenderBurst(bpy.types.Operator):
         bpy.app.handlers.render_post.append(self.post)
         bpy.app.handlers.render_cancel.append(self.cancelled)
 
-        self._timer = bpy.context.window_manager.event_timer_add(0.5, window=bpy.context.window)
-        bpy.context.window_manager.modal_handler_add(self)
+        self._timer = context.window_manager.event_timer_add(0.5, context.window)
+        context.window_manager.modal_handler_add(self)
 
         return {"RUNNING_MODAL"}
 
@@ -65,7 +64,7 @@ class RenderBurst(bpy.types.Operator):
                 bpy.app.handlers.render_pre.remove(self.pre)
                 bpy.app.handlers.render_post.remove(self.post)
                 bpy.app.handlers.render_cancel.remove(self.cancelled)
-                bpy.context.window_manager.event_timer_remove(self._timer)
+                context.window_manager.event_timer_remove(self._timer)
 
                 return {"FINISHED"} 
 
@@ -144,21 +143,13 @@ def menu_func(self, context):
     self.layout.operator(RenderBurst.bl_idname)
 
 def register():
-    from bpy.utils import register_class
-    register_class(RenderBurst)
-    register_class(RbFilterSettings)
-    register_class(RenderBurstCamerasPanel)
-    register_class(OBJECT_OT_RBButton)
+    bpy.utils.register_module(__name__)
     bpy.types.WindowManager.rb_filter = bpy.props.PointerProperty(type=RbFilterSettings)
-    bpy.types.TOPBAR_MT_render.append(menu_func)
+    bpy.types.INFO_MT_render.append(menu_func)
 
 def unregister():
-    from bpy.utils import unregister_class
-    unregister_class(RenderBurst)
-    bpy.types.TOPBAR_MT_render.remove(menu_func)
-    unregister_class(RbFilterSettings)
-    unregister_class(RenderBurstCamerasPanel)
-    unregister_class(OBJECT_OT_RBButton)
+    bpy.utils.unregister_module(__name__)
+    bpy.types.INFO_MT_render.remove(menu_func)
 
 if __name__ == "__main__":
     register()

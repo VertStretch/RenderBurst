@@ -10,7 +10,7 @@ Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov<br />
 
 ## How to Install the Add-on, step-by-step
 
-1. Download **[the archive with RenderBurst and Project Files](https://github.com/VertStretch/RenderBurst/archive/master.zip)** (to download, right click on the link then Save As)
+1. Download **[the archive with RenderBurst and Project Files](https://github.com/VertStretch/RenderBurst/archive/master.zip)**
 
 2. Unpack it
 

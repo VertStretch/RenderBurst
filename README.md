@@ -1,7 +1,7 @@
 # Render Burst - Batch Rendering Add-on for Blender 2.8 and 2.79
 
 Render all cameras, one by one, and store the results. <br />
-*Note: Blender 2.8 is supported! There are 2 versions, one for 2.8 and the other for 2.79. Doesn’t support animation yet.<br />*
+**Note: Blender 2.8 is supported! There are 2 versions, one for 2.8 and the other for 2.79. Doesn’t support animation yet.**
 
 Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov<br />
 

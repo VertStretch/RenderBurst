@@ -111,8 +111,7 @@ class RenderBurstCamerasPanel(bpy.types.Panel):
 
     def draw(self, context):
         wm = context.window_manager
-        box = self.layout.box()
-        row = box.row()
+        row = self.layout.row()
         row.prop(wm.rb_filter, "rb_filter_enum", expand=True)
         row = self.layout.row()
         row.operator("rb.renderbutton", text='Render!')

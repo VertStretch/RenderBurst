@@ -10,15 +10,17 @@ Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov<br />
 
 ## How to Install the Add-on, step-by-step
 
-1. Download **[RenderBurst.py](https://github.com/AG-ent/RenderBurst/blob/master/RenderBurst.py)** (to download, right click on the link then Save As)
+1. Download **[the archive with RenderBurst and Project Files](https://github.com/VertStretch/RenderBurst/archive/master.zip)** (to download, right click on the link then Save As)
 
-2. Launch Blender! :) Go File > User Preferences > Add-ons
+2. Unpack it
 
-3. Press the Install Add-on from File Button
+3. Launch Blender! :) Go Edit > User Preferences > Add-ons
+
+4. Press the Install Add-on from File Button
 
 ![Imgur](https://i.imgur.com/7YLATlj.png)
 
-4. Navigate to the folder with the **RenderBurst.py** file, select it and click Install Add-on from File.<br />
+5. Navigate to the folder with the **RenderBurst.py** file, select it and click Install Add-on from File.<br />
 
 You should now see a new tab in the right toolshelf, called Render Burst. 
 

@@ -41,7 +41,7 @@ class RenderBurst(bpy.types.Operator):
         if wm.rb_filter.rb_filter_enum == 'selected':
             self.shots = [ o.name+'' for o in bpy.context.selected_objects if o.type=='CAMERA' and o.visible_get() == True]
         else:
-            self.shots = [ o.name+'' for o in bpy.data.objects if o.type=='CAMERA' and o.visible_get() == True ]
+            self.shots = [ o.name+'' for o in bpy.context.visible_objects if o.type=='CAMERA' and o.visible_get() == True ]
 
 
         if len(self.shots) < 0:

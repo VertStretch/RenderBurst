@@ -8,6 +8,8 @@ bl_info = {
 
 import os
 import bpy
+import time
+import datetime
 
 from bpy.props import (
     StringProperty,
@@ -38,7 +40,7 @@ def return_cur_cam(self):
 def return_cam_samples(cam):
     try:
         cam_opts = cam.cam_settings
-        samples = cam_opts.samples_int
+        samples = cam_opts.rb_samples_int
     except:
         return -1
 
@@ -48,7 +50,7 @@ def return_cam_samples(cam):
 def return_is_cam_selected(cam):
     try:
         cam_opts = cam.cam_settings
-        selected = cam_opts.sel_bool
+        selected = cam_opts.rb_sel_bool
     except:
         return True  # default to true if no setting
 
@@ -123,6 +125,8 @@ class RenderBurst(bpy.types.Operator):
         return {"RUNNING_MODAL"}
 
     def modal(self, context, event):
+        wm = context.window_manager
+
         if event.type == "TIMER":
 
             if True in (not self.shots, self.stop is True):
@@ -140,7 +144,12 @@ class RenderBurst(bpy.types.Operator):
                 sc = bpy.context.scene
                 sc.camera = bpy.data.objects[self.shots[0]]
 
+                dt = ""
                 lpath = self.path
+                #add a datetime stamp to file name if overwrite is not set
+                if not wm.rb_filter.rb_overwrite_bool:
+                    ts = time.time()
+                    dt = "_" + datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H_%M')
 
                 if sc.render.filepath != "":
                     lpath = os.path.dirname(sc.render.filepath)
@@ -149,7 +158,7 @@ class RenderBurst(bpy.types.Operator):
                         lpath = "/"
                     lpath += "/"
 
-                sc.render.filepath = lpath + self.shots[0] + sc.render.file_extension
+                sc.render.filepath = lpath + self.shots[0] + dt + sc.render.file_extension
                 bpy.ops.render.render("INVOKE_DEFAULT", write_still=True)
 
         return {"PASS_THROUGH"}
@@ -167,15 +176,19 @@ class RbFilterSettings(bpy.types.PropertyGroup):
         default="all",
     )
 
+    rb_overwrite_bool = BoolProperty(
+        name="", description="Should output files be overwritten", default=True
+    )
+
 
 class RBCamSettings(PropertyGroup):
 
-    sel_bool = BoolProperty(
+    rb_sel_bool = BoolProperty(
         name="", description="Should camera be rendered", default=True
     )
 
     # will use current render samples setting as default
-    samples_int = IntProperty(
+    rb_samples_int = IntProperty(
         name="Samples",
         description="Render samples for this camera",
         default=bpy.context.scene.cycles.samples,
@@ -195,6 +208,7 @@ class RenderBurstCamerasPanel(bpy.types.Panel):
     bl_context = "render"
 
     def draw(self, context):
+        wm = context.window_manager
         box = self.layout.box()
         row = box.row()
         row.label(text="Camera Settings:", icon="INFO")
@@ -205,10 +219,12 @@ class RenderBurstCamerasPanel(bpy.types.Panel):
                 cam_opts = cam.cam_settings
                 row = box.row()
                 row.prop(cam, "name", text="Camera")
-                row.prop(cam_opts, "samples_int")
-                row.prop(cam_opts, "sel_bool")
+                row.prop(cam_opts, "rb_samples_int")
+                row.prop(cam_opts, "rb_sel_bool")
 
+        
         row = self.layout.row()
+        row.prop(wm.rb_filter, "rb_overwrite_bool", text="Overwrite")
         row.operator("rb.renderbutton", text="Render!")
         row = self.layout.row()
 

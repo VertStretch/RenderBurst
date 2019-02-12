@@ -191,7 +191,7 @@ class RBCamSettings(PropertyGroup):
     rb_samples_int = IntProperty(
         name="Samples",
         description="Render samples for this camera",
-        default=bpy.context.scene.cycles.samples,
+        default=128
     )
 
 

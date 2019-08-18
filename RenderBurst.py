@@ -11,6 +11,14 @@ bl_info = {
 import os
 import bpy
 
+def ShowMessageBox(message = "", title = "Message Box", icon = 'INFO'):
+
+    def draw(self, context):
+        self.layout.label(text=message)
+
+    bpy.context.window_manager.popup_menu(draw, title = title, icon = icon)
+
+
 class RenderBurst(bpy.types.Operator):
     """Render all cameras"""
     bl_idname = "render.renderburst"
@@ -75,13 +83,26 @@ class RenderBurst(bpy.types.Operator):
                 sc.camera = bpy.data.objects[self.shots[0]] 	
 
                 lpath = self.path
+                fpath = sc.render.filepath
+                is_relative_path = True
 
-                if sc.render.filepath != '':
-                    lpath = os.path.dirname(sc.render.filepath)
-                    lpath = lpath.rstrip('/')
-                    if lpath=='':
-                        lpath='/' 
-                    lpath+='/'
+                if fpath != "":
+                    if fpath[0]+fpath[1] == "//":
+                        is_relative_path = True
+                        fpath = bpy.path.abspath(fpath)
+                    else:
+                        is_relative_path = False
+
+                    lpath = os.path.dirname(fpath)
+
+                    if is_relative_path:
+                        lpath = bpy.path.relpath(lpath)
+
+                    lpath = lpath.rstrip("/")
+                    lpath = lpath.rstrip("\\")
+                    if lpath=="":
+                        lpath="/" 
+                    lpath+="/"
 
                 sc.render.filepath = lpath + self.shots[0] + sc.render.file_extension
                 bpy.ops.render.render("INVOKE_DEFAULT", write_still=True)

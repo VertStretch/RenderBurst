@@ -3,13 +3,13 @@ bl_info = {
     "category": "Render",
     "blender": (2, 80, 0),
     "author" : "Aidy Burrows, Gleb Alexandrov, Roman Alexandrov, CreativeShrimp.com <support@creativeshrimp.com>",
-    "version" : (1, 0, 28),
+    "version" : (1, 1, 29),
     "description" :
             "Render all cameras, one by one, and store results.",
 }
 
-import os
 import bpy
+import os
 
 def ShowMessageBox(message = "", title = "Message Box", icon = 'INFO'):
 
@@ -31,14 +31,14 @@ class RenderBurst(bpy.types.Operator):
     path = "//"
     disablerbbutton = False
 
-    def pre(self, dummy):
+    def pre(self, dummy, thrd = None):
         self.rendering = True
 
-    def post(self, dummy):
+    def post(self, dummy, thrd = None):
         self.shots.pop(0) 
         self.rendering = False
 
-    def cancelled(self, dummy):
+    def cancelled(self, dummy, thrd = None):
         self.stop = True
 
     def execute(self, context):
@@ -69,7 +69,6 @@ class RenderBurst(bpy.types.Operator):
         if event.type == 'TIMER':
 
             if True in (not self.shots, self.stop is True): 
-
                 bpy.app.handlers.render_pre.remove(self.pre)
                 bpy.app.handlers.render_post.remove(self.post)
                 bpy.app.handlers.render_cancel.remove(self.cancelled)

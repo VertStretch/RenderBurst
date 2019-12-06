@@ -27,12 +27,12 @@ class RB_OT_RenderInit(bpy.types.Operator):
 
     def execute(self, context):
         rd = context.scene.render
+        
         if rd.filepath is None or len(rd.filepath) < 1:
             self.report({"ERROR"}, 'Output path not defined. Please, define the output path on the render settings panel')
             return {"FINISHED"}
 
-        black_list = ('FFMPEG', 'AVI_JPEG', 'AVI_RAW', 'FRAMESERVER')
-        if rd.image_settings.file_format in black_list:
+        if rd.is_movie_format: 
             self.report({"ERROR"}, 'Animation formats are not supported. Yet :)')
             return {"FINISHED"}
 

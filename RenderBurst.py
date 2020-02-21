@@ -20,6 +20,7 @@ import os
 class RB_OT_RenderInit(bpy.types.Operator):
     bl_idname = "rb.render"
     bl_label = "Render Burst"
+    bl_options = {'REGISTER', 'INTERNAL'}
 
     @classmethod
     def poll(cls, context):
@@ -146,6 +147,7 @@ class RB_PT_RenderPanel(bpy.types.Panel):
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = "render"
+    bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
         rb = context.window_manager.rb_settings
@@ -158,7 +160,7 @@ class RB_PT_RenderPanel(bpy.types.Panel):
 
 
 def draw_render_burst(self, context):
-    self.layout.operator(RB_OT_RenderInit.bl_idname)
+    self.layout.operator(RB_OT_RenderInit.bl_idname, icon='CAMERA_DATA')
 
 
 # -------------------------------------------------------------------

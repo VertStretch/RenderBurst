@@ -2,56 +2,74 @@ bl_info = {
     "name": "Render Burst",
     "category": "Render",
     "blender": (2, 80, 0),
-    "author" : "Aidy Burrows, Gleb Alexandrov, Roman Alexandrov, CreativeShrimp.com <support@creativeshrimp.com>",
-    "version" : (1, 1, 29),
-    "description" :
-            "Render all cameras, one by one, and store results.",
+    "author" : "Aidy Burrows, Gleb Alexandrov, Roman Alexandrov, CreativeShrimp.com <support@creativeshrimp.com>, Christian Brinkmann (p2or)",
+    "version" : (1, 1, 30),
+    "description" : "Render all cameras, one by one, and store results.",
+    "location": "Render Properties > Render Burst",
+    "support": "COMMUNITY",
 }
 
 import bpy
 import os
 
-def ShowMessageBox(message = "", title = "Message Box", icon = 'INFO'):
 
-    def draw(self, context):
-        self.layout.label(text=message)
+# -------------------------------------------------------------------
+#    Operators
+# -------------------------------------------------------------------
 
-    bpy.context.window_manager.popup_menu(draw, title = title, icon = icon)
+class RB_OT_RenderInit(bpy.types.Operator):
+    bl_idname = "rb.render"
+    bl_label = "Render Burst"
+    bl_options = {'REGISTER', 'INTERNAL'}
+
+    @classmethod
+    def poll(cls, context):
+        return True
+
+    def execute(self, context):
+        rd = context.scene.render
+        
+        if rd.filepath is None or len(rd.filepath) < 1:
+            self.report({"ERROR"}, 'Output path not defined. Please, define the output path on the render settings panel')
+            return {"FINISHED"}
+
+        if rd.is_movie_format: 
+            self.report({"ERROR"}, 'Animation formats are not supported. Yet :)')
+            return {"FINISHED"}
+
+        bpy.ops.rb.renderburst()
+        return{'FINISHED'}
 
 
-class RenderBurst(bpy.types.Operator):
-    """Render all cameras"""
-    bl_idname = "render.renderburst"
+class RB_OT_RenderAllCameras(bpy.types.Operator):
+    """Modal Render Operator, allows to render within the UI"""
+    bl_idname = "rb.renderburst"
     bl_label = "Render Burst"
 
-    _timer = None
-    shots = None
-    stop = None
-    rendering = None
-    path = "//"
-    disablerbbutton = False
+    _timer = shots = stop = rendering = None
 
-    def pre(self, dummy, thrd = None):
+    def filter_cameras(self, context):
+        c = context
+        rb = c.window_manager.rb_settings
+        usr_objs = c.selected_objects if rb.rb_filter == 'SEL' else c.visible_objects
+        return [o.name for o in usr_objs if o.type == 'CAMERA' and o.visible_get()]
+
+    def pre(self, dummy, thrd=None):
         self.rendering = True
 
-    def post(self, dummy, thrd = None):
+    def post(self, dummy, thrd=None):
         self.shots.pop(0) 
         self.rendering = False
 
-    def cancelled(self, dummy, thrd = None):
+    def cancelled(self, dummy, thrd=None):
         self.stop = True
 
     def execute(self, context):
+        scene = context.scene
+        self.shots = self.filter_cameras(context)
         self.stop = False
         self.rendering = False
-        scene = bpy.context.scene
-        wm = bpy.context.window_manager
-        if wm.rb_filter.rb_filter_enum == 'selected':
-            self.shots = [ o.name+'' for o in bpy.context.selected_objects if o.type=='CAMERA' and o.visible_get() == True]
-        else:
-            self.shots = [ o.name+'' for o in bpy.context.visible_objects if o.type=='CAMERA' and o.visible_get() == True ]
-
-
+        
         if len(self.shots) < 0:
             self.report({"WARNING"}, 'No cameras defined')
             return {"FINISHED"}        
@@ -60,9 +78,8 @@ class RenderBurst(bpy.types.Operator):
         bpy.app.handlers.render_post.append(self.post)
         bpy.app.handlers.render_cancel.append(self.cancelled)
 
-        self._timer = bpy.context.window_manager.event_timer_add(0.5, window=bpy.context.window)
-        bpy.context.window_manager.modal_handler_add(self)
-
+        self._timer = bpy.context.window_manager.event_timer_add(0.3, window=context.window)
+        context.window_manager.modal_handler_add(self)
         return {"RUNNING_MODAL"}
 
     def modal(self, context, event):
@@ -72,16 +89,15 @@ class RenderBurst(bpy.types.Operator):
                 bpy.app.handlers.render_pre.remove(self.pre)
                 bpy.app.handlers.render_post.remove(self.post)
                 bpy.app.handlers.render_cancel.remove(self.cancelled)
-                bpy.context.window_manager.event_timer_remove(self._timer)
-
+                context.window_manager.event_timer_remove(self._timer)
                 return {"FINISHED"} 
 
             elif self.rendering is False: 
                                           
                 sc = bpy.context.scene
-                sc.camera = bpy.data.objects[self.shots[0]] 	
+                sc.camera = bpy.data.objects[self.shots[0]]     
 
-                lpath = self.path
+                lpath = "//"
                 fpath = sc.render.filepath
                 is_relative_path = True
 
@@ -99,85 +115,83 @@ class RenderBurst(bpy.types.Operator):
 
                     lpath = lpath.rstrip("/")
                     lpath = lpath.rstrip("\\")
-                    if lpath=="":
-                        lpath="/" 
-                    lpath+="/"
+                    if lpath == "":
+                        lpath = "/" 
+                    lpath += "/"
 
                 sc.render.filepath = lpath + self.shots[0] + sc.render.file_extension
                 bpy.ops.render.render("INVOKE_DEFAULT", write_still=True)
 
         return {"PASS_THROUGH"}
 
-# ui part
-class RbFilterSettings(bpy.types.PropertyGroup):
-    rb_filter_enum = bpy.props.EnumProperty(
+
+# -------------------------------------------------------------------
+#    UI
+# -------------------------------------------------------------------
+
+class RB_SettingsClass(bpy.types.PropertyGroup):
+    rb_filter: bpy.props.EnumProperty(
         name = "Filter",
         description = "Choose your destiny",
         items = [
-            ("all", "All Cameras", "Render all cameras"),
-            ("selected", "Selected Only", "Render selected only"),
-        ],
-        default = 'all'
+            ("ALL", "All Cameras", "Render all cameras"),
+            ("SEL", "Selected Only", "Render selected only"),
+        ], default = 'ALL'
     )   
 
 
-class RenderBurstCamerasPanel(bpy.types.Panel):
+class RB_PT_RenderPanel(bpy.types.Panel):
     """Creates a Panel in the scene context of the properties editor"""
     bl_label = "Render Burst"
     bl_idname = "SCENE_PT_layout"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = "render"
+    bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
-        wm = context.window_manager
+        rb = context.window_manager.rb_settings
+        layout = self.layout
+        row = layout.row()
+        row.prop(rb, "rb_filter", expand=True)
         row = self.layout.row()
-        row.prop(wm.rb_filter, "rb_filter_enum", expand=True)
-        row = self.layout.row()
-        row.operator("rb.renderbutton", text='Render!')
+        row.operator(RB_OT_RenderInit.bl_idname, text='Render!')
         row = self.layout.row()
 
-class OBJECT_OT_RBButton(bpy.types.Operator):
-    bl_idname = "rb.renderbutton"
-    bl_label = "Render"
 
-    #@classmethod
-    #def poll(cls, context):
-    #    return True
- 
-    def execute(self, context):
-        if bpy.context.scene.render.filepath is None or len(bpy.context.scene.render.filepath)<1:
-            self.report({"ERROR"}, 'Output path not defined. Please, define the output path on the render settings panel')
-            return {"FINISHED"}
+def draw_render_burst(self, context):
+    self.layout.operator(RB_OT_RenderInit.bl_idname, icon='CAMERA_DATA')
 
-        animation_formats = [ 'FFMPEG', 'AVI_JPEG', 'AVI_RAW', 'FRAMESERVER' ]
 
-        if bpy.context.scene.render.image_settings.file_format in animation_formats:
-            self.report({"ERROR"}, 'Animation formats are not supported. Yet :)')
-            return {"FINISHED"}
+# -------------------------------------------------------------------
+#    Registration
+# -------------------------------------------------------------------
 
-        bpy.ops.render.renderburst()
-        return{'FINISHED'}
+classes = (
+    RB_SettingsClass,
+    RB_OT_RenderInit,
+    RB_OT_RenderAllCameras,
+    RB_PT_RenderPanel
+)
 
-def menu_func(self, context):
-    self.layout.operator(RenderBurst.bl_idname)
 
 def register():
     from bpy.utils import register_class
-    register_class(RenderBurst)
-    register_class(RbFilterSettings)
-    register_class(RenderBurstCamerasPanel)
-    register_class(OBJECT_OT_RBButton)
-    bpy.types.WindowManager.rb_filter = bpy.props.PointerProperty(type=RbFilterSettings)
-    bpy.types.TOPBAR_MT_render.append(menu_func)
+    for cls in classes:
+        register_class(cls)
+        
+    bpy.types.WindowManager.rb_settings = bpy.props.PointerProperty(type=RB_SettingsClass)
+    bpy.types.TOPBAR_MT_render.append(draw_render_burst)
+
 
 def unregister():
+    bpy.types.TOPBAR_MT_render.remove(draw_render_burst)
+    
     from bpy.utils import unregister_class
-    unregister_class(RenderBurst)
-    bpy.types.TOPBAR_MT_render.remove(menu_func)
-    unregister_class(RbFilterSettings)
-    unregister_class(RenderBurstCamerasPanel)
-    unregister_class(OBJECT_OT_RBButton)
+    for cls in reversed(classes):
+        unregister_class(cls)
+
+    del bpy.types.WindowManager.rb_settings
 
 if __name__ == "__main__":
     register()

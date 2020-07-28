@@ -2,8 +2,8 @@ bl_info = {
     "name": "Render Burst",
     "category": "Render",
     "blender": (2, 80, 0),
-    "author" : "Aidy Burrows, Gleb Alexandrov, Roman Alexandrov, CreativeShrimp.com <support@creativeshrimp.com>",
-    "version" : (1, 1, 29),
+    "author" : "Aidy Burrows, Gleb Alexandrov, Roman Alexandrov, CreativeShrimp.com <support@creativeshrimp.com>, Tobias Wilhelm",
+    "version" : (1, 1, 30),
     "description" :
             "Render all cameras, one by one, and store results.",
 }

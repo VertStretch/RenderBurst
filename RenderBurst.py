@@ -110,7 +110,7 @@ class RenderBurst(bpy.types.Operator):
 
 # ui part
 class RbFilterSettings(bpy.types.PropertyGroup):
-    rb_filter_enum = bpy.props.EnumProperty(
+    rb_filter_enum : bpy.props.EnumProperty(
         name = "Filter",
         description = "Choose your destiny",
         items = [

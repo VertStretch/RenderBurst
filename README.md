@@ -24,7 +24,7 @@ Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov<br />
 
 You should now see a new tab in the right toolshelf, called Render Burst. 
 
-![Imgur](https://i.imgur.com/o46uTdZ.jpg)
+![Imgur](https://imgur.com/ZBytAbL.jpg)
 
 Congrats!<br />
 

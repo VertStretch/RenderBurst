@@ -18,13 +18,13 @@ Authors: Aidy Burrows, Gleb Alexandrov, Roman Alexandrov<br />
 
 4. Press the Install Add-on from File Button
 
-![Imgur](https://i.imgur.com/lzxrXq6.png)
+![Imgur](https://i.imgur.com/Wxy068r.jpg)
 
 5. Navigate to the folder with the **RenderBurst.py** file, select it and click Install Add-on from File.<br />
 
 You should now see a new tab in the right toolshelf, called Render Burst. 
 
-![Imgur](https://i.imgur.com/UwBMOlq.png)
+![Imgur](https://i.imgur.com/o46uTdZ.jpg)
 
 Congrats!<br />
 

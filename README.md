@@ -1,4 +1,4 @@
-# Render Burst - Batch Rendering Add-on for Blender 4.0, 2.8 and 2.79
+# Render Burst - Batch Rendering Add-on for Blender 4.1, 4.0, 2.8 and 2.79
 
 Render all cameras, one by one, and store the results. <br />
 **Note: Blender 2.8 is supported! There are now 3 versions, one for 4.0, 2.8 and the other for 2.79. Doesn’t support animation yet.**
